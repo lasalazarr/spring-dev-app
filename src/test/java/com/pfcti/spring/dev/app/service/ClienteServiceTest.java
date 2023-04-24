@@ -100,4 +100,49 @@ class ClienteServiceTest {
         System.out.println("NOMBRE CAMBIADO: " + clienteDtoCambiado.getNombre());
         assertNotEquals(clienteDtoOriginal.getNombre(), clienteDtoCambiado.getNombre());
     }
+
+    @Test
+    void findByApellidosAndAndNombre() {
+        List<ClienteDto> clienteDtos = clienteService.findByApellidosAndAndNombre("SANCHEZ", "RAUL");
+        assertFalse(clienteDtos.isEmpty());
+        System.out.println("CLIENTE ENCONTRADO: " + clienteDtos.get(0).getApellidos());
+        assertEquals("SANCHEZ", clienteDtos.get(0).getApellidos());
+    }
+
+    @Test
+    void busquedaDinamicaPorCriterios() {
+        List<ClienteDto> clienteDtos = clienteService.busquedaDinamicaPorCriterios(new ClienteDto());
+        assertFalse(clienteDtos.isEmpty());
+        clienteDtos.forEach(clienteDto -> {System.out.println("Cliente: " +clienteDto.getApellidos());});
+        assertTrue(clienteDtos.size() >=2);
+
+        ClienteDto clienteDto = new ClienteDto();
+        clienteDto.setApellidos("SANCHEZ");
+        clienteDtos = clienteService.busquedaDinamicaPorCriterios(clienteDto);
+        clienteDtos.forEach(clienteDto2 -> {System.out.println("Cliente: " +clienteDto2.getApellidos());});
+        assertTrue(clienteDtos.size() == 4);
+
+        clienteDto = new ClienteDto();
+        clienteDto.setApellidos("SANCHEZ");
+        clienteDto.setNombre("HORACIO");
+        clienteDtos = clienteService.busquedaDinamicaPorCriterios(clienteDto);
+        clienteDtos.forEach(clienteDto3 -> {System.out.println("Cliente: " +clienteDto3.getApellidos());});
+        assertTrue(clienteDtos.size() == 1);
+
+        clienteDto = new ClienteDto();
+        clienteDto.setApellidos("SANCHEZ");
+        clienteDto.setCedula("111");
+        clienteDtos = clienteService.busquedaDinamicaPorCriterios(clienteDto);
+        clienteDtos.forEach(clienteDto4 -> {System.out.println("Cliente: " + clienteDto4.getApellidos());});
+        assertTrue(clienteDtos.size() == 1);
+
+        clienteDto = new ClienteDto();
+        clienteDto.setApellidos("SANCHEZ");
+        clienteDto.setNombre("HORACIO");
+        clienteDto.setCedula("1111");
+        clienteDtos = clienteService.busquedaDinamicaPorCriterios(clienteDto);
+        clienteDtos.forEach(clienteDto5 -> {System.out.println("Cliente: " + clienteDto5.getApellidos());});
+        assertTrue(clienteDtos.size() == 1);
+
+    }
 }

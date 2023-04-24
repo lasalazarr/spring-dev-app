@@ -1,5 +1,6 @@
 package com.pfcti.spring.dev.app.service;
 
+import com.pfcti.spring.dev.app.criteria.ClienteSpecification;
 import com.pfcti.spring.dev.app.dto.ClienteDto;
 import com.pfcti.spring.dev.app.model.Cliente;
 import com.pfcti.spring.dev.app.repository.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,6 +23,8 @@ public class ClienteService {
     private TarjetaRepository tarjetaRepository;
     private InversionRepository inversionRepository;
     private DireccionRepository direccionRepository;
+
+    private ClienteSpecification clienteSpecification;
 
     public void insertarCliente(ClienteDto clienteDto) {
         Cliente cliente = new Cliente();
@@ -106,6 +110,22 @@ public class ClienteService {
 
     public void updateClienteByQuery(String nombre, String apellidos){
         clienteRepository.updateClienteByQuery(nombre, apellidos);
+    }
+
+    public List<ClienteDto> findByApellidosAndAndNombre(String apellidos, String nombre){
+        return clienteRepository
+                .findByApellidosAndAndNombre(apellidos,nombre)
+                .stream()
+                .map(this::fromClienteToClienteDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ClienteDto> busquedaDinamicaPorCriterios(ClienteDto clienteDtoFilter){
+        return clienteRepository
+                .findAll(clienteSpecification.buildFilter(clienteDtoFilter))
+                .stream()
+                .map(this::fromClienteToClienteDto)
+                .collect(Collectors.toList());
     }
 
     private ClienteDto fromClienteToClienteDto(Cliente cliente){
