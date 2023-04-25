@@ -19,7 +19,7 @@ class CuentaServiceTest {
     @Test
     void busquedaCuentasPorCriterio() {
         CuentaDto cuentaDto = new CuentaDto();
-        cuentaDto.setEstado(false);
+        cuentaDto.setEstado(true);
         List<Cuenta> cuentas = cuentaService.busquedaCuentasPorCriterio(cuentaDto);
         cuentas.forEach(
                 cuentaDtoResultado -> {

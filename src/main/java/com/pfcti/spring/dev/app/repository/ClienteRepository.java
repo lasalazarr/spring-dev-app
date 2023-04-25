@@ -29,4 +29,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer>, JpaS
     void updateClienteByQuery(String nombre, String apellidos);
 
     List<Cliente> findByApellidosAndAndNombre(String apellidos, String nombre);
+
+    List<Cliente> findClientesByCedula(String cedula);
+
+    List<Cliente> findClientesByNombreContainingIgnoreCaseOrApellidosContainingIgnoreCase(String nombres, String apellidos);
 }
