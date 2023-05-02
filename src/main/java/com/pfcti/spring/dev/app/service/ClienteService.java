@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class ClienteService {
+
+
     private ClienteRepository clienteRepository;
     private CuentaRepository cuentaRepository;
     private TarjetaRepository tarjetaRepository;
@@ -32,6 +34,7 @@ public class ClienteService {
         cliente.setApellidos(clienteDto.getApellidos());
         cliente.setCedula(clienteDto.getCedula());
         cliente.setTelefono(clienteDto.getTelefono());
+        cliente.setPais(clienteDto.getPais());
         clienteRepository.save(cliente);
     }
 
@@ -41,7 +44,6 @@ public class ClienteService {
                             throw new RuntimeException("Cliente no existe");
                         }
                 );
-        ClienteDto clienteDto = new ClienteDto();
         return fromClienteToClienteDto(cliente);
     }
 
@@ -57,6 +59,7 @@ public class ClienteService {
         cliente.setApellidos(clienteDto.getApellidos());
         cliente.setCedula(clienteDto.getCedula());
         cliente.setTelefono(clienteDto.getTelefono());
+        cliente.setPais(clienteDto.getPais());
         clienteRepository.save(cliente);
     }
 
@@ -133,4 +136,21 @@ public class ClienteService {
         BeanUtils.copyProperties(cliente, clienteDto);
         return clienteDto;
     }
+
+
+    public io.spring.guides.gs_producing_web_service.Cliente obtenerClienteSoap(int idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> {
+                    throw new RuntimeException("Cliente No Existe");
+                });
+        io.spring.guides.gs_producing_web_service.Cliente clienteWs = new io.spring.guides.gs_producing_web_service.Cliente();
+        clienteWs.setId(cliente.getId());
+        clienteWs.setApellidos(cliente.getApellidos());
+        clienteWs.setNombre(cliente.getNombre());
+        clienteWs.setCedula(cliente.getCedula());
+        clienteWs.setTelefono(cliente.getTelefono());
+        clienteWs.setPais(cliente.getPais());
+        return clienteWs;
+    }
+
 }
